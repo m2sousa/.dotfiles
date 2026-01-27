@@ -26,8 +26,8 @@ bindsym $mod+l focus right
 bindsym $mod+h focus left
 
 # Change monitor focus
-bindsym $alt+a focus output left
-bindsym $alt+f focus output right
+bindsym $mod+$alt+a focus output left
+bindsym $mod+$alt+f focus output right
 
 # Move focused window
 bindsym $mod+Shift+j move down
