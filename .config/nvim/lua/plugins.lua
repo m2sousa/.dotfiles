@@ -92,7 +92,16 @@ vim.g.rustaceanvim = {
             vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
                 vim.lsp.buf.format()
             end, {})
-        end,
+
+			-- Rustfmt
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				buffer = bufnr,
+				callback = function()
+					vim.lsp.buf.format({ async = false })
+				end,
+			})
+
+		end,
         default_settings = {
             ['rust-analyzer'] = {
 				assist = {

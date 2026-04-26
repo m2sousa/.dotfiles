@@ -32,6 +32,3 @@ local options = {
 for key, value in pairs(options) do
 	vim.opt[key] = value
 end
-
--- Rust autoformat on save
-vim.g.rustfmt_autosave = 1
