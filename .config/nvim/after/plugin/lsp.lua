@@ -1,3 +1,6 @@
+-- LSP Progress messages
+require('fidget').setup()
+
 -- LSP on_attach function
 local on_attach = function(_, bufnr)
     local bufmap = function(keys, func)
