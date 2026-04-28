@@ -60,8 +60,7 @@ keymap(NORMAL_MODE, "<A-j>", "<cmd>lua ui.nav_next()<CR>", opts)
 keymap(NORMAL_MODE, "<A-k>", "<cmd>lua ui.nav_prev()<CR>", opts)
 
 -- Rust related
--- FIXME: This there a better way rather than read to maintain opened the Floaterm ?
-keymap(NORMAL_MODE, "<C-t>r", ":FloatermNew cargo run; read<CR>", opts)
-keymap(NORMAL_MODE, "<C-t>d", ":FloatermNew RUST_BACKTRACE=1 cargo run; read<CR>", opts)
-keymap(NORMAL_MODE, "<C-t>b", ":FloatermNew cargo build; read<CR>", opts)
-keymap(NORMAL_MODE, "<C-t>c", ":FloatermNew cargo check; read<CR>", opts)
+keymap(NORMAL_MODE, "<C-t>r", ":FloatermNew --autoclose=0 cargo run<CR>", opts)
+keymap(NORMAL_MODE, "<C-t>d", ":FloatermNew --autoclose=0 RUST_BACKTRACE=1 cargo run<CR>", opts)
+keymap(NORMAL_MODE, "<C-t>b", ":FloatermNew --autoclose=0 cargo build<CR>", opts)
+keymap(NORMAL_MODE, "<C-t>c", ":FloatermNew --autoclose=0 cargo check<CR>", opts)
