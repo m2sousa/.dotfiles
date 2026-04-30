@@ -42,3 +42,4 @@ fuse
 thrift
 protobuf
 rust-analyzer
+netcat
