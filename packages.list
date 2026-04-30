@@ -43,3 +43,4 @@ thrift
 protobuf
 rust-analyzer
 netcat
+openvpn
