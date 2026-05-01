@@ -44,3 +44,6 @@ protobuf
 rust-analyzer
 netcat
 openvpn
+gobuster
+exploitdb
+metasploit
