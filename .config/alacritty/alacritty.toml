@@ -21,7 +21,7 @@ family = "JetBrains Mono"
 style = "Medium"
 
 [terminal.shell]
-program = "/bin/fish"
+program = "/bin/tmux"
 
 [window]
 opacity = 1
@@ -41,3 +41,8 @@ key = "J"
 mods = "Alt"
 action = "ScrollHalfPageDown"
 mode = "~Alt"
+
+[[keyboard.bindings]]
+key = "Back"
+mods = "Control"
+chars = "\u0017"
