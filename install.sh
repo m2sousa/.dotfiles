@@ -14,3 +14,10 @@ for f in $CONFIG_FILES; do
     ln -vfs $(pwd)/$f $HOME/$f 2> /dev/null
 done
 
+WALLPAPERS_FILES=$(find img/ -type f -print)
+
+for f in $WALLPAPERS_FILES; do
+    DEST=.config/wallpapers/${f#img/}
+    mkdir -vp "$HOME/${DEST%/*}"
+    ln -vfs "$(pwd)/$f" "$HOME/$DEST" 2>/dev/null
+done
