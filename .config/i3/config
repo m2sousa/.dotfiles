@@ -98,6 +98,7 @@ bindsym $mod+Shift+0 move container to workspace number 10
 assign [class="Chromium"] workspace number 1
 assign [class="Alacritty"] workspace number 2
 assign [class="discord"] workspace number 3
+assign [class="steam"] workspace number 9
 
 ###### COMMANDS EXECUTED AT START
 exec --no-startup-id chromium
