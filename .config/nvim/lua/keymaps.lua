@@ -44,7 +44,7 @@ keymap(VISUAL_BLOCK_MODE, "<A-j>", ":move '>+1<CR>gv-gv", opts)
 keymap(VISUAL_BLOCK_MODE, "<A-k>", ":move '<-2<CR>gv-gv", opts)
 
 -- Telescope related
-keymap(NORMAL_MODE, "<leader>f", "<cmd>lua require'telescope.builtin'.find_files({find_command = { 'rg', '--files', '--glob', '!.git/', '--glob', '!.bak/', '--hidden' },})<CR>", opts)
+keymap(NORMAL_MODE, "<leader>f", "<cmd>lua require'telescope.builtin'.find_files({find_command = { 'rg', '--files', '--glob', '!.git/', '--glob', '!.bak/', '--glob', '!.cache/', '--glob', '!./build/', '--hidden' },})<CR>", opts)
 keymap(NORMAL_MODE, "<leader>/", "<cmd>Telescope live_grep<CR>", opts)
 keymap(NORMAL_MODE, "<leader>g", "<cmd> Telescope git_files<CR>", opts)
 
