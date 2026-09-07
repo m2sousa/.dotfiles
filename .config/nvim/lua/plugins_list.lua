@@ -43,12 +43,6 @@ return {
 		},
 	},
 
-	-- Treesitter
-	{
-		'nvim-treesitter/nvim-treesitter',
-		build = ':TSUpdate',
-	},
-
 	-- Telescope
 	{
 		'nvim-telescope/telescope.nvim',
