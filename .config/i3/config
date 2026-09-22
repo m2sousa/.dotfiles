@@ -97,13 +97,13 @@ bindsym $mod+Shift+0 move container to workspace number 10
 
 assign [class="Chromium"] workspace number 1
 assign [class="Alacritty"] workspace number 2
-assign [class="discord"] workspace number 3
+assign [class="vesktop"] workspace number 3
 assign [class="steam"] workspace number 9
 
 ###### COMMANDS EXECUTED AT START
 exec --no-startup-id chromium
 exec --no-startup-id alacritty
-exec --no-startup-id discord
+exec --no-startup-id vesktop
 exec --no-startup-id feh --bg-scale ~/.config/wallpapers/girl.jpg
 exec --no-startup-id sleep 1 && picom
 exec_always --no-startup-id "killall polybar; for m in $(xrandr --query | grep ' connected' | cut -d' ' -f1); do MONITOR=$m polybar -r default & done"
