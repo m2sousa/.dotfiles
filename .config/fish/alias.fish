@@ -15,17 +15,7 @@ alias ll="ls -Al"
 alias vi="nv"
 alias vim="nv"
 
-function nv --wraps nvim 
-    if [ (count $argv) -lt 1 ];
-        if [ -d ./src/ ]; nvim ./src/
-        else; nvim .
-        end
-    else; nvim $argv
-    end
-end
-
 # Cargo related
 alias cr="cargo run"
 alias cb="cargo build"
 alias cc="cargo check"
-
