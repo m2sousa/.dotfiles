@@ -1,0 +1,49 @@
+abi <abi/4.0>,
+
+include <tunables/global>
+
+@{exec_path}    = /{,usr/}bin/spotify-launcher
+@{launcher_dir} = @{HOME}/.local/share/spotify-launcher
+@{spotify_dir}  = @{launcher_dir}/install/usr/share/spotify
+@{spotify_bin}  = @{spotify_dir}/spotify
+
+profile spotify-launcher @{exec_path} {
+  include <abstractions/base>
+
+  network inet stream,
+  network inet6 stream,
+  network inet dgram,
+  network inet6 dgram,
+  network netlink raw,
+
+  @{exec_path} mr,
+
+  @{spotify_bin} px -> spotify,
+
+  owner @{launcher_dir}/** rw,
+  owner @{spotify_dir}/** mr,
+
+  /usr/bin/sqv ix,
+  /usr/share/spotify-launcher/keyring.pgp r,
+
+  /usr/bin/zenity ix,
+  /etc/fonts/** r,
+  /usr/share/fonts/ r,
+  /usr/share/{fonts,fontconfig,icons}/** r,
+
+  # `spotify-launcher` lookups for configurations files (in order):
+  owner @{HOME}/.config/spotify-launcher.conf r,
+  /etc/spotify-launcher.conf r,
+
+  # During the download, the launcher creates and writes to a `/tmp/.tmp*` directory.
+  /tmp/* r,
+  /tmp/.tmp*/ rw,
+  owner /tmp/.tmp*/** rw,
+
+  @{sys}/fs/cgroup/user.slice/cpu.max r,
+  @{sys}/fs/cgroup/user.slice/**/cpu.max r,
+
+  owner @{PROC}/@{pid}/cgroup r,
+
+  include if exists <local/spotify-launcher>
+}
