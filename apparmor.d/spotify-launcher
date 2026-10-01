@@ -9,6 +9,8 @@ include <tunables/global>
 
 profile spotify-launcher @{exec_path} {
   include <abstractions/base>
+  include <abstractions/nameservice>
+  include <abstractions/ssl_certs>
 
   network inet stream,
   network inet6 stream,
