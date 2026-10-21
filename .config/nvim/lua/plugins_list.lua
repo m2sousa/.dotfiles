@@ -14,7 +14,7 @@ return {
 		priority = 1000,
 		config = function()
 			vim.cmd("colorscheme rose-pine-main")
-		end
+		end,
 	},
 
 	-- LSP
@@ -116,5 +116,24 @@ return {
 	-- Floating terminals embedded in neovim
 	{
 		'voldikss/vim-floaterm'
-	}
+	},
+
+	-- Simple, unified, single tabpage interface for diff's review
+	{
+		"esmuellert/codediff.nvim",
+		cmd = "CodeDiff",
+		opts = {
+			highlights = {
+				line_insert = "#1e3a2f",
+				line_delete = "#3d1f2a",
+			},
+			diff = {
+				layout = "side-by-side",
+				filler_text = "-",
+			},
+			explorer = {
+				line_stats = { enabled = true },
+			},
+		},
+	},
 }
