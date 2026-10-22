@@ -14,7 +14,9 @@ include <tunables/global>
 
 @{CC_CONTROL}  = @{CLAUDE_CONFIG_DIR}/{settings.json,settings.local.json,CLAUDE.md}
 @{CC_CONTROL} += @{CLAUDE_CONFIG_DIR}/{agents,commands,hooks,output-styles,plugins,rules,skills,workflows}{,/**}
-@{CC_CONTROL} += @{CLAUDE_WORKSPACE}/{,**/}{CLAUDE.md,CLAUDE.local.md,.mcp.json}
+
+# Note that CLAUDE.md related on working directory have read/write rights since there not added below !
+@{CC_CONTROL} += @{CLAUDE_WORKSPACE}/{,**/}.mcp.json
 @{CC_CONTROL} += @{CLAUDE_WORKSPACE}/{,**/}.claude/{settings.json,settings.local.json,agents,commands,hooks,output-styles,rules,skills,workflows}{,/**}
 
 @{WORKSPACE_SECRETS} = @{CLAUDE_WORKSPACE}/{,**/}{.env{,.*},.envrc,.npmrc,.pypirc,.netrc,*.pem,*.key}
