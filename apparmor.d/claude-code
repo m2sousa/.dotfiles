@@ -1,0 +1,125 @@
+abi <abi/4.0>,
+
+include <tunables/global>
+
+@{CLAUDE_WORKSPACE} = @{HOME}/agents/code
+@{CLAUDE_CONFIG_DIR} = @{HOME}/.config/claude
+
+@{AGENT_TOOLS}  = /{usr/,}bin/{bash,sh,dash,zsh}
+@{AGENT_TOOLS} += /{usr/,}bin/{awk,base64,basename,cat,chmod,cmp,comm,cp,cut,date,diff,dirname,du,echo,egrep,env,expr,false,fgrep,file,find,gawk,grep,gunzip,gzip,head,id,install,jq,kill,less,ln,ls,mawk,md5sum,mkdir,mktemp,mv,nproc,od,paste,patch,printf,ps,pwd,readlink,realpath,rm,rmdir,sed,seq,sha1sum,sha256sum,sleep,sort,stat,tail,tar,tee,test,timeout,touch,tr,tree,true,tty,uname,uniq,unzip,wc,which,whoami,xargs,xz,zcat,zip}
+@{AGENT_TOOLS} += /usr/bin/{git,rg} /usr/lib/git-core/*
+@{AGENT_TOOLS} += /usr/bin/{python3*,pip,pip3,node,nodejs,npm,npx,make}
+@{AGENT_TOOLS} += /usr/{lib/node_modules,share/nodejs}/npm/bin/np{m,x}-cli.js
+@{AGENT_TOOLS} += /usr/bin/which.debianutils
+
+@{CC_CONTROL}  = @{CLAUDE_CONFIG_DIR}/{settings.json,settings.local.json,CLAUDE.md}
+@{CC_CONTROL} += @{CLAUDE_CONFIG_DIR}/{agents,commands,hooks,output-styles,plugins,rules,skills,workflows}{,/**}
+@{CC_CONTROL} += @{CLAUDE_WORKSPACE}/{,**/}{CLAUDE.md,CLAUDE.local.md,.mcp.json}
+@{CC_CONTROL} += @{CLAUDE_WORKSPACE}/{,**/}.claude/{settings.json,settings.local.json,agents,commands,hooks,output-styles,rules,skills,workflows}{,/**}
+
+@{WORKSPACE_SECRETS} = @{CLAUDE_WORKSPACE}/{,**/}{.env{,.*},.envrc,.npmrc,.pypirc,.netrc,*.pem,*.key}
+
+@{ESCAPE_BIN} = /{usr/,}{bin,sbin}/{sudo,su,pkexec,doas,run0,crontab,at,batch,systemd-run,systemctl,busctl,dbus-send,dbus-launch,gdbus,gio,loginctl,machinectl,nsenter,unshare,chroot,bwrap,firejail,newuidmap,newgidmap,mount,umount,fusermount,fusermount3,tmux,screen,ssh,scp,sftp,ssh-add,ssh-agent,docker,podman,flatpak-spawn,xdg-open}
+
+@{IPC_SOCKETS} = /tmp/{.X11-unix,.ICE-unix,ssh-*,tmux-*}/{,**} /tmp/{dbus-*,vscode-*.sock,krb5cc*}
+
+profile claude-code @{HOME}/.local/share/claude/versions/* {
+  include <abstractions/base>
+  include <abstractions/nameservice>
+  include <abstractions/ssl_certs>
+  include <abstractions/openssl>
+
+  network inet stream,
+  network inet6 stream,
+  network inet dgram,
+  network inet6 dgram,
+
+  # No write access on binaries (no self-update or tampering).
+  @{HOME}/.local/bin/claude r,
+  @{HOME}/.local/share/claude/versions/* mrix,
+
+  owner @{CLAUDE_WORKSPACE}/{,**} r,
+  owner @{CLAUDE_WORKSPACE}/** rwk,
+  # No audit on git write: does flood the logs on git status otherwise.
+  deny @{CLAUDE_WORKSPACE}/{,**/}.git{,/**} w,
+  audit deny @{WORKSPACE_SECRETS} rw,
+
+  owner @{CLAUDE_CONFIG_DIR}/{,**} rwk,
+  audit deny @{CC_CONTROL} w,
+  /etc/claude-code/{,**} r,
+
+  @{AGENT_TOOLS} Cx -> tools,
+
+  # Escapes: privileges, other sandboxes/supervisors, remote shells, browser
+  audit deny @{ESCAPE_BIN} x,
+
+  /usr/share/** r,
+  owner /tmp/** rwk,
+  owner /var/tmp/** rwk,
+  audit deny @{IPC_SOCKETS} rw,
+  /dev/tty rw,
+  owner /dev/pts/* rw,
+  owner @{PROC}/@{pid}/{cmdline,stat,statm,mountinfo,cgroup,fd/} r,
+  @{sys}/fs/cgroup/{,**} r,
+
+  signal (send) peer=claude-code//tools,
+  ptrace (read) peer=claude-code//tools,
+  unix (send, receive) peer=(label=claude-code//tools),
+
+  # child profile for Claude's running code
+  profile tools {
+    include <abstractions/base>
+    include <abstractions/bash>
+    include <abstractions/nameservice>
+    include <abstractions/ssl_certs>
+    include <abstractions/openssl>
+
+    deny network inet,
+    deny network inet6,
+
+    @{CLAUDE_WORKSPACE}/{,**} r,
+    owner @{CLAUDE_WORKSPACE}/** mrwlkix,
+    deny @{CLAUDE_WORKSPACE}/{,**/}.git{,/**} w,
+    audit deny @{CC_CONTROL} w,
+    audit deny @{WORKSPACE_SECRETS} rw,
+
+    owner @{CLAUDE_CONFIG_DIR}/{agents,commands,hooks,output-styles,plugins,rules,skills,workflows}/{,**} r,
+    owner @{CLAUDE_CONFIG_DIR}/shell-snapshots/{,**} r,
+    owner @{CLAUDE_CONFIG_DIR}/session-env/{,**} rwk,
+
+    @{AGENT_TOOLS} mrix,
+    /usr/{lib/node_modules,share/nodejs}/** r,
+
+    # Escapes: privileges, other sandboxes/supervisors, remote shells, browser
+    audit deny @{ESCAPE_BIN} x,
+
+    /usr/share/** r,
+    /usr/include/** r,
+    owner /tmp/** rwlk,
+    owner /var/tmp/** rwlk,
+    audit deny @{IPC_SOCKETS} rw,
+    audit deny unix (connect) peer=(addr="@/tmp/.X11-unix/X[0-9]*"),
+
+    owner @{HOME}/.cache/claude-agent/{,**} rwk,
+
+    owner @{HOME}/.{gitconfig,zshrc,zshenv,bash_aliases} r,
+    owner @{HOME}/.config/git/{,**} r,
+    /etc/gitconfig r,
+    deny @{HOME}/.bash_history rw,
+
+    owner @{PROC}/@{pid}/{cmdline,stat,statm,mountinfo,cgroup,fd/} r,
+    @{sys}/fs/cgroup/{,**} r,
+
+    signal (receive) peer=claude-code,
+    unix (send, receive) peer=(label=claude-code),
+    ptrace (readby) peer=claude-code,
+
+    deny capability,
+    audit deny userns,
+    audit deny mount,
+    audit deny umount,
+    audit deny pivot_root,
+  }
+
+  include if exists <local/claude-code>
+}
