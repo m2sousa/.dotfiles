@@ -6,7 +6,7 @@ include <tunables/global>
 @{CLAUDE_CONFIG_DIR} = @{HOME}/.config/claude
 
 @{AGENT_TOOLS}  = /{usr/,}bin/{bash,sh,dash,zsh}
-@{AGENT_TOOLS} += /{usr/,}bin/{awk,base64,basename,cat,chmod,cmp,comm,cp,cut,date,diff,dirname,du,echo,egrep,env,expr,false,fgrep,file,find,gawk,grep,gunzip,gzip,head,id,install,jq,kill,less,ln,ls,mawk,md5sum,mkdir,mktemp,mv,nproc,od,paste,patch,printf,ps,pwd,readlink,realpath,rm,rmdir,sed,seq,sha1sum,sha256sum,sleep,sort,stat,tail,tar,tee,test,timeout,touch,tr,tree,true,tty,uname,uniq,unzip,wc,which,whoami,xargs,xz,zcat,zip}
+@{AGENT_TOOLS} += /{usr/,}bin/{awk,as,base64,basename,cat,chmod,clang-format,cmp,comm,cp,cut,date,diff,dirname,du,echo,egrep,env,expr,false,fgrep,file,find,gawk,gcc,grep,gunzip,gzip,head,id,install,jq,kill,ld,less,ln,ls,mawk,md5sum,mkdir,mktemp,mv,nproc,od,paste,patch,printf,ps,pwd,readlink,realpath,rm,rmdir,sed,seq,sha1sum,sha256sum,sleep,sort,stat,tail,tar,tee,test,timeout,touch,tr,tree,true,tty,uname,uniq,unzip,wc,which,whoami,xargs,xz,zcat,zip}
 @{AGENT_TOOLS} += /usr/bin/{git,rg} /usr/lib/git-core/*
 @{AGENT_TOOLS} += /usr/bin/{python3*,pip,pip3,node,nodejs,npm,npx,make}
 @{AGENT_TOOLS} += /usr/{lib/node_modules,share/nodejs}/npm/bin/np{m,x}-cli.js
@@ -92,6 +92,10 @@ profile claude-code @{HOME}/.local/share/claude/versions/* {
 
     # Escapes: privileges, other sandboxes/supervisors, remote shells, browser
     audit deny @{ESCAPE_BIN} x,
+
+	/usr/lib/** rm,
+	/usr/lib64/** rm,
+	/usr/lib/gcc/** ix,
 
     /usr/share/** r,
     /usr/include/** r,
