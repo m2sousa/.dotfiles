@@ -64,3 +64,7 @@ keymap(NORMAL_MODE, "<C-t>r", ":FloatermNew --autoclose=0 cargo run<CR>", opts)
 keymap(NORMAL_MODE, "<C-t>d", ":FloatermNew --autoclose=0 RUST_BACKTRACE=1 cargo run<CR>", opts)
 keymap(NORMAL_MODE, "<C-t>b", ":FloatermNew --autoclose=0 cargo build<CR>", opts)
 keymap(NORMAL_MODE, "<C-t>c", ":FloatermNew --autoclose=0 cargo check<CR>", opts)
+
+-- Definitions related
+keymap(NORMAL_MODE, "gd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", opts)
+keymap(NORMAL_MODE, "gD", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
